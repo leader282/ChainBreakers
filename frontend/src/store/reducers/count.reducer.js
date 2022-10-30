@@ -302,6 +302,8 @@ const CountReducer = (
             if (modusers[buyInd].fiat < price * topsell.quantity) {
               qty = parseInt(modusers[buyInd].fiat / price);
             } else qty = topsell.quantity;
+            if(qty!=0)
+            {
             [modusers, trans] = transact(
               modusers,
               trans,
@@ -314,12 +316,15 @@ const CountReducer = (
             );
             topbuy.quantity -= qty;
             topsell.quantity = 0;
+            }
           } else {
             console.log("2");
 
             if (modusers[buyInd].fiat < price * topbuy.quantity) {
               qty = parseInt(modusers[buyInd].fiat / price);
             } else qty = topbuy.quantity;
+            if(qty!=0)
+            {
             [modusers, trans] = transact(
               modusers,
               trans,
@@ -332,12 +337,15 @@ const CountReducer = (
             );
             topsell.quantity -= qty;
             topbuy.quantity = 0;
+            }
             // console.log(modusers, trans, "in trans loop 2");
           }
           if (topbuy.quantity != 0) queue(buynew, topbuy, buycomp);
           if (topsell.quantity != 0) queue(sellnew, topsell, sellcomp);
           // console.log(trans, "in trans loop ");
         } else {
+          queue(buynew, topbuy, buycomp);
+          queue(sellnew, topsell, sellcomp);
           break;
         }
       }
@@ -386,8 +394,8 @@ const CountReducer = (
               console.log(error.response.headers);
             }
           });
-        copynotice.push({ message: "yeah" });
-        console.log(copynotice);
+        // copynotice.push({ message: "yeah" });
+        console.log(buynew,sellnew,"transaction done");
         return Object.assign({}, state, {
           sell: sellnew,
           buy: buynew,

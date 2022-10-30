@@ -109,7 +109,7 @@ const Price = () => {
         <Card.Body>
           <Card.Title>Current Market Price</Card.Title>
           <Card.Text>
-            {prices.length != 0 ? prices.at(-1).curr_price : "NA"}
+            {prices.length != 0 ? prices.at(-1).curr_price + "$" : "NA"}
           </Card.Text>
         </Card.Body>
       </Card>

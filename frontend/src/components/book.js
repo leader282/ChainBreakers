@@ -15,9 +15,10 @@ import { useState, useEffect } from "react";
 // axios.defaults.baseURL = "http://localhost";
 // axios.defaults.port = 8000;
 const Book = () => {
+  const dispatch = useDispatch();
+
   const buy = useSelector(state => state.buy);
   const sell = useSelector(state => state.sell);
-  const dispatch = useDispatch();
 
   function getOrders() {
     axios({
