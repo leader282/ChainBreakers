@@ -11,6 +11,7 @@ import {
   ADDTRANS,
   SETPRICE,
 } from "../actions/count.actions";
+import axios from "axios";
 import PriorityQueue from "js-priority-queue";
 function buycomp(a, b) {
   if (a.price == b.price) return b.order_id > a.order_id;
@@ -20,6 +21,8 @@ function sellcomp(a, b) {
   if (a.price == b.price) return b.order_id > a.order_id;
   else return a.price < b.price;
 }
+var copynotice = [];
+var msg = "";
 function queue(list, element, comp) {
   // creating object from queue element
   // var qElement = new QElement(element, priority);
@@ -71,6 +74,16 @@ function transact(
     buyorder: buyorder,
     sellorder: sellorder,
   });
+  msg =
+    list[buyInd].name +
+    " bought " +
+    quantity +
+    " stocks from " +
+    list[sellInd].name +
+    " at $" +
+    price;
+  copynotice.push({ message: msg });
+
   console.log("transaction occuring", list, trans);
   return [list, trans];
 }
@@ -83,12 +96,29 @@ const CountReducer = (
     marketprice: [],
     transaction: [],
     orders: [],
+    notices: [],
   },
   action
 ) => {
+  var userlist = state.users.map(a => {
+    return { ...a };
+  });
+  var u;
+
   switch (action.type) {
     case MARKETSELL:
       //new market sell order
+      u = userlist.find(el => {
+        return el.user_id == action.user_id;
+      });
+      msg =
+        u.name +
+        " placed a market sell order of " +
+        action.quantity +
+        " stocks";
+      copynotice.push({
+        message: msg,
+      });
       var sellnew = state.sell.map(a => {
         return { ...a };
       });
@@ -107,10 +137,19 @@ const CountReducer = (
 
       return Object.assign({}, state, {
         sell: sellnew,
+        notices: copynotice,
       });
 
     case MARKETBUY:
       //new market sell order
+      u = userlist.find(el => {
+        return el.user_id == action.user_id;
+      });
+      msg =
+        u.name + " placed a market buy order of " + action.quantity + " stocks";
+      copynotice.push({
+        message: msg,
+      });
       var buynew = state.buy.map(a => {
         return { ...a };
       });
@@ -127,10 +166,23 @@ const CountReducer = (
       );
       return Object.assign({}, state, {
         buy: buynew,
+        notices: copynotice,
       });
 
     case LIMITBUY:
       //limit buy order can lead to transactions when there is limit sell orders below it or market sell orders pending
+      u = userlist.find(el => {
+        return el.user_id == action.user_id;
+      });
+      msg =
+        u.name +
+        " placed a limit buy order of " +
+        action.quantity +
+        " stocks at $" +
+        action.price;
+      copynotice.push({
+        message: msg,
+      });
       var buynew = state.buy.map(a => {
         return { ...a };
       });
@@ -149,10 +201,23 @@ const CountReducer = (
       // console.log("limit order", buynew);
       return Object.assign({}, state, {
         buy: buynew,
+        notices: copynotice,
       });
 
     case LIMITSELL:
       //limit sell order can lead to transactions when there is limit buy orders above it or any market buy orders pending
+      u = userlist.find(el => {
+        return el.user_id == action.user_id;
+      });
+      msg =
+        u.name +
+        " placed a limit sell order of " +
+        action.quantity +
+        " stocks at $" +
+        action.price;
+      copynotice.push({
+        message: msg,
+      });
       var sellnew = state.sell.map(a => {
         return { ...a };
       });
@@ -171,6 +236,7 @@ const CountReducer = (
 
       return Object.assign({}, state, {
         sell: sellnew,
+        notices: copynotice,
       });
 
     case ORDER:
@@ -279,14 +345,58 @@ const CountReducer = (
       console.log(price, "in order");
       mprice.push({ curr_price: price, step: 0 });
       if (!flag) return state;
-      else
+      else {
+        console.log(copynotice);
+        var tbody = {
+          trans: trans,
+        };
+        axios({
+          method: "POST",
+          url: "http://127.0.0.1:8000/api/transaction",
+          data: tbody,
+        })
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            if (error.response) {
+              console.log(error.response);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            }
+          });
+        var pbody = {
+          prices: mprice,
+        };
+        axios({
+          method: "POST",
+          url: "http://127.0.0.1:8000/api/price",
+          data: pbody,
+        })
+          .then(response => {
+            console.log(response.data, "price data");
+            // response.data.forEach(price => {
+            //   dispatch(setprice(price.curr_price, price.step));
+            // });
+          })
+          .catch(error => {
+            if (error.response) {
+              console.log(error.response);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            }
+          });
+        copynotice.push({ message: "yeah" });
+        console.log(copynotice);
         return Object.assign({}, state, {
           sell: sellnew,
           buy: buynew,
           users: modusers,
           transaction: trans,
           marketprice: mprice,
+          notices: copynotice,
         });
+      }
 
     case SETPRICE:
       var nprice = [...state.marketprice];
@@ -319,18 +429,19 @@ const CountReducer = (
       });
     case ADDTRANS:
       console.log("Addtras", action.buyer);
+      var t = state.transaction.map(a => {
+        return { ...a };
+      });
+      t.push({
+        buyer: action.buyer,
+        seller: action.seller,
+        price: action.price,
+        quantity: action.quantity,
+        buyorder: action.buyorder,
+        sellorder: action.sellorder,
+      });
       return Object.assign({}, state, {
-        transaction: [
-          ...state.transaction,
-          {
-            buyer: action.buyer,
-            seller: action.seller,
-            price: action.price,
-            quantity: action.quantity,
-            buyorder: action.buyorder,
-            sellorder: action.sellorder,
-          },
-        ],
+        transaction: t,
       });
 
     case UPDATEUSER:

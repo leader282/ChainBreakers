@@ -6,6 +6,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { Provider, useSelector, useDispatch } from "react-redux";
+// import axios from "axios";
 import {
   marketbuy,
   marketsell,
@@ -25,52 +26,52 @@ const Control = () => {
   const users = useSelector(state => state.users);
   const trans = useSelector(state => state.transaction);
   const prices = useSelector(state => state.marketprice);
-  function createTrans() {
-    var tbody = {
-      trans: trans,
-    };
-    return axios({
-      method: "POST",
-      url: "http://127.0.0.1:8000/api/transaction",
-      data: tbody,
-    }).catch(error => {
-      if (error.response) {
-        console.log(error.response);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      }
-    });
-  }
+  // function createTrans() {
+  //   var tbody = {
+  //     trans: trans,
+  //   };
+  //   return axios({
+  //     method: "POST",
+  //     url: "http://127.0.0.1:8000/api/transaction",
+  //     data: tbody,
+  //   }).catch(error => {
+  //     if (error.response) {
+  //       console.log(error.response);
+  //       console.log(error.response.status);
+  //       console.log(error.response.headers);
+  //     }
+  //   });
+  // }
 
-  useEffect(() => {
-    createTrans();
-  }, [trans]);
-  function createPrice() {
-    var pbody = {
-      prices: prices,
-    };
-    return axios({
-      method: "POST",
-      url: "http://127.0.0.1:8000/api/price",
-      data: pbody,
-    })
-      .then(response => {
-        console.log(response.data, "price data");
-        // response.data.forEach(price => {
-        //   dispatch(setprice(price.curr_price, price.step));
-        // });
-      })
-      .catch(error => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
-  }
-  useEffect(() => {
-    createPrice();
-  }, [prices]);
+  // useEffect(() => {
+  //   createTrans();
+  // }, [trans]);
+  // function createPrice() {
+  //   var pbody = {
+  //     prices: prices,
+  //   };
+  //   return axios({
+  //     method: "POST",
+  //     url: "http://127.0.0.1:8000/api/price",
+  //     data: pbody,
+  //   })
+  //     .then(response => {
+  //       console.log(response.data, "price data");
+  //       // response.data.forEach(price => {
+  //       //   dispatch(setprice(price.curr_price, price.step));
+  //       // });
+  //     })
+  //     .catch(error => {
+  //       if (error.response) {
+  //         console.log(error.response);
+  //         console.log(error.response.status);
+  //         console.log(error.response.headers);
+  //       }
+  //     });
+  // }
+  // useEffect(() => {
+  //   createPrice();
+  // }, [prices]);
 
   function createOrder({ buy, user_id, market, quantity, price }) {
     var body = {

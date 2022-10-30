@@ -5,25 +5,7 @@ import { Provider, useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { addTrans } from "../store/actions/count.actions";
 import { useEffect } from "react";
-function transText(trans, users) {
-  var buyInd = users.findIndex(
-    user => parseInt(user.user_id) === parseInt(trans.buyer)
-  );
-  var sellInd = users.findIndex(
-    user => parseInt(user.user_id) === parseInt(trans.seller)
-  );
-  // console.log(buyInd, sellInd, "trans text");
 
-  return (
-    users[buyInd].name +
-    " bought " +
-    trans.quantity +
-    " stocks from " +
-    users[sellInd].name +
-    " at $" +
-    trans.price
-  );
-}
 const History = () => {
   const dispatch = useDispatch();
 
@@ -71,10 +53,32 @@ const History = () => {
 
   const trans = useSelector(state => state.transaction);
   const users = useSelector(state => state.users);
-  var l = trans.map(el => transText(el, users));
+  var l;
+  function transText(trans) {
+    console.log(trans, users, "trensxt");
+    var buyInd = users.findIndex(user => {
+      return parseInt(user.user_id) === parseInt(trans.buyer);
+    });
+    var sellInd = users.findIndex(user => {
+      return parseInt(user.user_id) === parseInt(trans.seller);
+    });
+    console.log(buyInd, sellInd, "trans text");
+
+    return (
+      users[buyInd].name +
+      " bought " +
+      trans.quantity +
+      " stocks from " +
+      users[sellInd].name +
+      " at $" +
+      trans.price
+    );
+  }
+  l = trans.map(el => transText(el));
   const state = {
     listitems: l,
   };
+
   // const state = {
   //   listitems: [
   //     "List Item 1",
@@ -107,7 +111,7 @@ const History = () => {
           .reverse()
           .map((listitem, i) => (
             <li
-              key={listitem + i}
+              key={listitem + " " + i}
               className="list-group-item list-group-item-primary">
               {listitem}
             </li>
@@ -118,9 +122,9 @@ const History = () => {
           {state.listitems
             .slice(0, -3)
             .reverse()
-            .map(listitem => (
+            .map((listitem, i) => (
               <li
-                key={listitem}
+                key={listitem + " " + i}
                 className="list-group-item list-group-item-primary">
                 {listitem}
               </li>
