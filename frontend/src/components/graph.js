@@ -1,8 +1,6 @@
-import React from "react";
-import { Chart as ChartJS } from "chart.js/auto";
-import { Line } from "react-chartjs-2";
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import 'chart.js/auto';
+import { Chart } from 'react-chartjs-2';
 // import Table from "react-bootstrap/Table";
 import { Provider, useSelector, useDispatch } from "react-redux";
 import {
@@ -16,6 +14,7 @@ import {
 } from "../store/actions/count.actions";
 import store from "../store";
 import axios from "axios";
+
 
 const Graph = () => {
   const dispatch = useDispatch();
@@ -52,9 +51,10 @@ const Graph = () => {
   return (
     <>
       <h1 style={{ marginTop: 30 }}>Graph</h1>
-      <Line
+      <Chart
+        type="line"
         datasetIdKey="id"
-        height={"200%"}
+        height={200}
         data={{
           labels: labels,
           datasets: [

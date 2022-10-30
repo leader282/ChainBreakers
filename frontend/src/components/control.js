@@ -149,22 +149,22 @@ const Control = () => {
   // console.log("users in control", users);
   // console.log(buy, sell, "in buy sell");
   return (
-    <Card style={{ width: "18rem" }}>
+    <Card style={{ width: "18rem", padding: 20 }}>
       <Card.Title style={{ marginBottom: -10, marginTop: 5 }}>
         Trade Panel
       </Card.Title>
       <hr />
       <Form onSubmit={e => handleSubmit(e)}>
-        <Form.Group as={Col} controlId="formGridBUY">
+        <Form.Group as={Col} controlId="formGridBUY" style={{ marginBottom: 20}}>
           <Form.Label>BUY/SELL</Form.Label>
-          <Form.Select defaultValue="Choose...">
+          <Form.Select defaultValue="Choose..." style={{marginTop: -8}}>
             <option value="buy">BUY</option>
             <option value="sell">SELL</option>
           </Form.Select>
         </Form.Group>
-        <Form.Group as={Col} controlId="formGridUser">
+        <Form.Group as={Col} controlId="formGridUser" style={{ marginBottom: 20}}>
           <Form.Label>Select User</Form.Label>
-          <Form.Select defaultValue="Select User">
+          <Form.Select defaultValue="Select User" style={{marginTop: -8}}>
             {users
               ? users.map(function (user) {
                   var list = [];
@@ -184,22 +184,22 @@ const Control = () => {
             <option value="sell">User2</option> */}
           </Form.Select>
         </Form.Group>
-        <Form.Group as={Col} controlId="formGridOrder">
+        <Form.Group as={Col} controlId="formGridOrder" style={{ marginBottom: 20}}>
           <Form.Label>Order Type</Form.Label>
-          <Form.Select defaultValue="Select User">
+          <Form.Select defaultValue="Select User" style={{marginTop: -8}}>
             <option value="limit">Limit Order</option>
             <option value="market">Market Order</option>
           </Form.Select>
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicQuantity">
+        <Form.Group className="mb-3" controlId="formBasicQuantity" style={{ marginBottom: 20}}>
           <Form.Label>Stock Amount</Form.Label>
-          <Form.Control type="number" min="1" name="amount" />
+          <Form.Control type="number" min="1" name="amount" placeholder="Stock Amount" style={{marginTop: -8}} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicFiat">
           <Form.Label>At Price</Form.Label>
-          <Form.Control type="number" step="0.1" min="0" name="price" />
+          <Form.Control type="number" step="0.1" min="0" name="price" placeholder="Price" style={{marginTop: -8}} />
         </Form.Group>
-        <Button variant="primary" type="submit" style={{ marginBottom: 10 }}>
+        <Button variant="primary" type="submit">
           Place Order
         </Button>
       </Form>

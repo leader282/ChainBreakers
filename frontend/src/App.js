@@ -62,27 +62,26 @@ function App() {
             width: 1500,
             options: { maintainAspectRatio: false },
             height: 400,
+            marginRight: 20,
+            marginLeft: 50
           }}>
           <Book />
         </div>
       </div>
       <div className="d-flex">
-        <div style={{ width: 550, marginLeft: 30, marginTop: 160 }}>
+        <div style={{ width: 550, marginLeft: 30, marginTop: 100 }}>
           <Portfolio />
         </div>
-        <div style={{ marginLeft: 150, marginRight: 150, marginTop: 200 }}>
+        <div style={{ marginLeft: 60, marginRight: 60, marginTop: 240, width: 500}}>
           <Price />
         </div>
-        <div style={{ marginRight: 20 }}>
+        <div style={{ marginTop: 40 }}>
           <Control />
         </div>
       </div>
       <div>
-        <div style={{ width: 1000, marginLeft: 220, marginBottom: 20 }}>
+        <div style={{ width: 1000, marginLeft: 220, marginBottom: 20, marginTop: 30 }}>
           <History />
-        </div>
-        <div style={{ width: 700, marginBottom: 20, marginLeft: 350 }}>
-          <Profile />
         </div>
       </div>
       <Notifications />

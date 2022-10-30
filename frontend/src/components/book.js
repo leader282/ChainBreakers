@@ -86,7 +86,7 @@ const Book = () => {
     console.log(buy, sell, buynew, sellnew, "table");
     var nbuys = buynew.length;
     var nsells = sellnew.length;
-    if (nbuys == 0 && nsells == 0) return [];
+    // if (nbuys == 0 && nsells == 0) return [];
     if (nbuys > 0) blist.push(buynew[0]);
     if (nsells > 0) slist.push(sellnew[0]);
 
@@ -110,17 +110,21 @@ const Book = () => {
     nbuys = blist.length;
     nsells = slist.length;
     slist.reverse();
-    for (j = 0, p = 0; j < nbuys || p < nsells; j++, p++) {
+    var maxn = 15;
+    if(maxn < nsells) maxn = nsells;
+    else if(maxn < nbuys) maxn = nbuys;
+    for (j = 0, p = 0; j < maxn; j++, p++) {
+      console.log("Hello")
       list.push(
-        <tr key={j + "book"}>
-          <th scope="row" colSpan="2">
-            {j < nbuys ? blist[j].quantity : ""}
-          </th>
-          <td>{j < nbuys ? blist[j].price : ""}</td>
-          <th scope="row" colSpan="2">
-            {p < nsells ? slist[p].price : ""}
-          </th>
-          <td>{p < nsells ? slist[p].quantity : ""}</td>
+        <tr key={j + "book"} style={{height: 30}}>
+          <td scope="row" colSpan="2">
+            {j < nbuys ? blist[j].quantity : " "}
+          </td>
+          <td style={{color: "#7FFF00"}}>{j < nbuys ? blist[j].price : " "}</td>
+          <td scope="row" colSpan="2" style={{color: "red"}}>
+            {p < nsells ? slist[p].price : " "}
+          </td>
+          <td>{p < nsells ? slist[p].quantity : " "}</td>
         </tr>
       );
     }
@@ -146,15 +150,15 @@ const Book = () => {
   }
   return (
     <>
-      <h1 style={{ marginTop: 30, marginBottom: 90 }}>Order Book</h1>
-      <div>
-        <Table responsive striped bordered hover variant="dark" size="sm">
+      <h1 style={{ marginTop: 30, marginBottom: 40 }}>Order Book</h1>
+      <div style={{maxHeight: 435, overflow: "scroll"}}>
+        <Table responsive striped bordered hover variant="dark">
           <thead>
             <tr>
-              <th scope="col" colSpan="4">
+              <th scope="col" colSpan="4" style={{color: "#7FFF00"}}>
                 Buy
               </th>
-              <th scope="col" colSpan="4">
+              <th scope="col" colSpan="4" style={{color: "red"}}>
                 Sell
               </th>
             </tr>
@@ -164,11 +168,11 @@ const Book = () => {
               <th scope="row" colSpan="2">
                 Quantity
               </th>
-              <td>Price</td>
+              <th>Price</th>
               <th scope="row" colSpan="2">
                 Price
               </th>
-              <td>Quantity</td>
+              <th>Quantity</th>
             </tr>
             {table()}
           </tbody>
