@@ -2,8 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import { Provider, useSelector, useDispatch } from "react-redux";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 import {
   marketbuy,
   marketsell,
@@ -68,12 +68,48 @@ const Portfolio = () => {
       fiat: 1200,
     },
   ];
+  function createUser(data) {
+    axios({
+      method: "POST",
+      url: "http://127.0.0.1:8000/api/profile",
+      data: data,
+    })
+      .then(response => {
+        const profile = response.data;
+        console.log("success in profile", profile);
+        dispatch(
+          addUser(profile.name, profile.quant, profile.fiat, profile.user_id)
+        );
+        // update in database
+      })
+      .catch(error => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  }
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    var name = event.target[0].value;
+    var quantity = parseInt(event.target[1].value);
+    var fiat = event.target[2].value;
+    var data = {
+      name: name,
+      quant: quantity,
+      fiat: fiat,
+    };
+    console.log(data, "handlesubmit");
+    createUser(data);
+  };
 
   return (
     <>
-      <h1 style={{ marginTop: 30, marginBottom: 30}}>User Portfolio</h1>
-      <div style={{maxHeight: 350, overflow: "scroll"}}>
-        <Table responsive striped bordered hover variant="dark" size="sm">
+      <h1 style={{ marginTop: 30, marginBottom: 30 }}>User Portfolio</h1>
+      <div style={{ maxHeight: 350, overflow: "scroll" }}>
+        <Table responsive bordered hover variant="dark" size="sm">
           <thead>
             <tr>
               <th>User name</th>
@@ -99,27 +135,35 @@ const Portfolio = () => {
         </Table>
       </div>
       <div>
-        <Form>
-          <Table responsive striped bordered hover size="sm">
-                <tbody>
-                  <tr>
-                    <td>
-                    <Form.Group className="mb-3" controlId="formBasicName">
-                      <Form.Control type="text" placeholder="Enter name" />
-                    </Form.Group>
-                    </td>
-                    <td>
-                    <Form.Group className="mb-3" controlId="formBasicQuantity">
-                      <Form.Control type="number" step="1" placeholder="Enter quantity" />
-                    </Form.Group>
-                    </td>
-                    <td>
-                    <Form.Group className="mb-3" controlId="formBasicFiat">
-                      <Form.Control type="number" step="0.1" placeholder="Enter fiat" />
-                    </Form.Group>
-                    </td>
-                  </tr>
-                </tbody>
+        <Form onSubmit={e => handleSubmit(e)}>
+          <Table responsive bordered hover size="sm">
+            <tbody>
+              <tr>
+                <td>
+                  <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Control type="text" placeholder="Enter name" />
+                  </Form.Group>
+                </td>
+                <td>
+                  <Form.Group className="mb-3" controlId="formBasicQuantity">
+                    <Form.Control
+                      type="number"
+                      step="1"
+                      placeholder="Enter quantity"
+                    />
+                  </Form.Group>
+                </td>
+                <td>
+                  <Form.Group className="mb-3" controlId="formBasicFiat">
+                    <Form.Control
+                      type="number"
+                      step="0.1"
+                      placeholder="Enter fiat"
+                    />
+                  </Form.Group>
+                </td>
+              </tr>
+            </tbody>
           </Table>
           <Button variant="primary" type="submit">
             Submit

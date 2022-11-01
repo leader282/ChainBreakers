@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import 'chart.js/auto';
-import { Chart } from 'react-chartjs-2';
+import "chart.js/auto";
+import { Chart } from "react-chartjs-2";
 // import Table from "react-bootstrap/Table";
 import { Provider, useSelector, useDispatch } from "react-redux";
 import {
@@ -14,7 +14,6 @@ import {
 } from "../store/actions/count.actions";
 import store from "../store";
 import axios from "axios";
-
 
 const Graph = () => {
   const dispatch = useDispatch();
@@ -62,6 +61,9 @@ const Graph = () => {
               id: 1,
               label: "",
               data: data,
+              borderColor: "rgb(75, 192, 192)",
+              backgroundColor: "rgb(40,44,52)",
+              tension: 0.1,
             },
           ],
         }}
